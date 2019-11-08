@@ -29,8 +29,8 @@ export const Input = styled.TextInput`
     borderBottomWidth: 2;
 `
 export const Button = styled.TouchableHighlight`
-    padding: 20px;
-    border-radius: 35;
+    padding: 10px;
+    border-radius: 25;
     shadow-color: #000;
     shadow-offset: {width: 0; height: 30};
     shadow-opacity: 0.8;
@@ -43,14 +43,14 @@ export const Button = styled.TouchableHighlight`
 `
 export const ErrorMessage = styled.Text`
     textAlign: center;
-    color: #ce2009;
+    color: #ffffff;
     fontSize: 16px;
     marginBottom: 15px;
     marginHorizontal: 20px;
 `
 
 export const ButtonText = styled.Text`
-    color: #2900FF;
+    color: #DF013A;
     fontSize: 16px;
     textAlign: center;
 `

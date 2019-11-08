@@ -3,9 +3,7 @@ import PropTypes from 'prop-types'
 import { StatusBar, AsyncStorage } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 
-
 import api from '../../services/api'
-import { login, setUser, TOKEN_APP, USER_AUTH } from '../../services/auth'
 
 import {
   Container,
@@ -25,9 +23,10 @@ navigationOptions = {
 
 export default class signUp extends Component {
   state = {
-    email: '',
-    password: '',
-    username: '',
+    email: 'teste@gmail.com',
+    password: 'teste',
+    name: 'teste de usuario',
+    cpf: '12345678909',
     error: ''
   }
 
@@ -39,8 +38,8 @@ export default class signUp extends Component {
   }
 
   async componentDidMount () {
-    const user = JSON.parse( await AsyncStorage.getItem('@SpaceApi:user'))
-    const token = await AsyncStorage.getItem('@SpaceApi:token')
+    const user = JSON.parse( await AsyncStorage.getItem('@PizabreakApp:user'))
+    const token = await AsyncStorage.getItem('@PizabreakApp:token')
 
     if (token && user) {
       const resetAction = StackActions.reset({
@@ -55,8 +54,12 @@ export default class signUp extends Component {
 
   }
 
-   handleUsernameChange = (username) => {
-    this.setState({ username: username})
+  handleNameChange = (name) => {
+    this.setState({ name: name})
+  }
+
+  handleCPFChange = (cpf) => {
+    this.setState({ cpf: cpf})
   }
 
   handleEmailChange = (email) => {
@@ -72,16 +75,18 @@ export default class signUp extends Component {
   }
 
   handleSignUp = async () => {
-    if(this.state.username.length === 0 || this.state.email.length === 0 || this.state.password.length === 0) {
+    if(this.state.name.length === '' || this.state.email.length === '' 
+    || this.state.cpf.length === '' || this.state.password.length === '') {
       this.setState({ error: 'Preencha as informações!' })
     } else {
       try {
         
         this.setState({ error: '' })
 
-         await api.post('/signup', {
-          username: this.state.username,
+         await api.post('/user', {
+          name: this.state.name,
           email: this.state.email,
+          cpf: this.state.cpf,
           password: this.state.password
         })
 
@@ -103,25 +108,34 @@ export default class signUp extends Component {
   render () {
     return (
       <ImageOverlay
-        source={require("../../../assets/AuthBackground.jpg")}
+        source={require("../../../assets/AuthBackground.png")}
         overlayColor="#fff"
         overlayAlpha={0.6}
         height={'100%'} 
+        blurRadius={2}
         contentPosition="bottom"
       >
       <Container>
         <StatusBar hidden/>
         <Logo source={require('../../../assets/logoRegister.png')} resizeMode="contain"/>
         <Input
-          placeholder="Nome do Usuario"
-          value={this.state.username}
-          onChangeText={this.handleUsernameChange}
+          placeholder="Nome"
+          value={this.state.name}
+          onChangeText={this.handleNameChange}
           autoCapitalize="none"
           autoCorrect={false}
           placeholderTextColor='#1F00DF'
-        />
+        />        
         <Input
-          placeholder="Endereço de e-mail"
+        placeholder="CPF"
+        value={this.state.cpf}
+        onChangeText={this.handleCPFChange}
+        autoCapitalize="none"
+        autoCorrect={false}
+        placeholderTextColor='#1F00DF'
+      />
+        <Input
+          placeholder="E-mail"
           value={this.state.email}
           onChangeText={this.handleEmailChange}
           autoCapitalize="none"
@@ -141,7 +155,7 @@ export default class signUp extends Component {
         {this.state.error.length !== 0 && <ErrorMessage>{this.state.error}</ErrorMessage>}
 
         <Button onPress={this.handleSignUp}>
-          <ButtonText>CADSATRAR</ButtonText>
+          <ButtonText>CADASTRAR</ButtonText>
         </Button>
 
         <SignUpLink onPress={this.handleSignIn}>

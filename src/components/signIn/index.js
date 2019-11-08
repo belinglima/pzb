@@ -3,9 +3,7 @@ import PropTypes from 'prop-types'
 import { StatusBar, AsyncStorage } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 
-
 import api from '../../services/api'
-import { login, setUser, TOKEN_APP, USER_AUTH } from '../../services/auth'
 
 import {
   Background,
@@ -25,8 +23,8 @@ navigationOptions = {
 
 export default class SignIn extends Component {
     state = {
-      email: '',
-      password: '',
+      email: 'belinglima@gmail.com',
+      password: 'belinglima',
       error: ''
     }
 
@@ -38,19 +36,19 @@ export default class SignIn extends Component {
     }
 
     async componentDidMount () {
-      const user = JSON.parse( await AsyncStorage.getItem('@SpaceApi:user'))
-      const token = await AsyncStorage.getItem('@SpaceApi:token')
+      // const user = JSON.parse( await AsyncStorage.getItem('@PizabreakApp:user'))
+      const token = await AsyncStorage.getItem('@PizabreakApp:token')
 
-      if (token && user) {
+      if (token) {
         const resetAction = StackActions.reset({
           index: 0,
           actions: [
-            NavigationActions.navigate({ routeName: 'Main' }),
+            NavigationActions.navigate({ routeName: 'Home' }),
           ]
         })
 
         this.props.navigation.dispatch(resetAction)
-      }
+      } 
 
     }
 
@@ -67,31 +65,29 @@ export default class SignIn extends Component {
     }
 
     handleSignin = async () => {
-      if(this.state.email.length === 0 || this.state.password.length === 0) {
+      if(this.state.email.length === '' || this.state.password.length === '') {
         this.setState({ error: 'Preencha as informações!' })
       } else {
         try {
           
           this.setState({ error: '' })
 
-          const res = await api.post('/signin', {
+          const res = await api.post('/sessions', {
             email: this.state.email,
             password: this.state.password
           })
-
-          
+        
+         
           const token = res.data.token.token
-          const user = res.data.user
+          const user = res.data.nome
 
-          await AsyncStorage.multiSet([
-            ['@SpaceApi:token', token ],
-            ['@SpaceApi:user', JSON.stringify(user) ]
-          ])
+          await AsyncStorage.setItem("@PizabreakApp:token", token);
+          await AsyncStorage.setItem("@PizabreakApp:user", user);     
 
           const resetAction = StackActions.reset({
             index: 0,
             actions: [
-              NavigationActions.navigate({ routeName: 'Main' }),
+              NavigationActions.navigate({ routeName: 'Home' }),
             ]
           })
 
@@ -99,24 +95,25 @@ export default class SignIn extends Component {
 
         } catch (err) {
           this.setState({ error: `${err}`})
-        }
-      }
-    }
+        }  
+        
+    }}
 
   render () {
     return (
       <Background
-        source={require("../../../assets/AuthBackground.jpg")}
-        overlayColor="#1F00DF"
+        source={require("../../../assets/AuthBackground.png")}
+        overlayColor="#DF013A"
         overlayAlpha={0.6}
         height={'100%'} 
+        blurRadius={2}
         contentPosition="bottom"
       >
       <Container>
         <StatusBar hidden/>
         <Logo source={require('../../../assets/logoLogin.png')} resizeMode="contain"/>
         <Input
-          placeholder="Endereço de e-mail"
+          placeholder="E-mail"
           value={this.state.email}
           onChangeText={this.handleEmailChange}
           autoCapitalize="none"
@@ -134,11 +131,11 @@ export default class SignIn extends Component {
         {this.state.error.length !== 0 && <ErrorMessage>{this.state.error}</ErrorMessage>}
 
         <Button onPress={this.handleSignin}>
-          <ButtonText>ACESSAR</ButtonText>
+          <ButtonText>CONECTAR</ButtonText>
         </Button>
 
         <SignUpLink onPress={this.handleSignup}>
-          <SignUpLinkText>Não possuo conta!</SignUpLinkText>
+          <SignUpLinkText>Registre-Se</SignUpLinkText>
         </SignUpLink>
       </Container>
       </Background>

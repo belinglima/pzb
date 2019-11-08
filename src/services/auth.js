@@ -14,6 +14,7 @@ export const setUser = async user => {
     await AsyncStorage.setItem(USER_AUTH, JSON.stringify(user))
 }
 
-export const logout = async () => {
-  await AsyncStorage.clear()
-}
+export const onSignOut = () => AsyncStorage.removeItem(TOKEN_APP);
+// export const logout = async () => {
+//   await AsyncStorage.clear()
+// }

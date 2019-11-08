@@ -5,6 +5,7 @@ export const Container = styled.View`
     alignItems: center;
     justifyContent: center;
     width: 100%;
+    overflow: scroll;
 `
 
 export const Logo = styled.Image`
@@ -39,7 +40,7 @@ export const Button = styled.TouchableHighlight`
 `
 export const ErrorMessage = styled.Text`
     textAlign: center;
-    color: #ce2009;
+    color: #FFFFFF;
     fontSize: 16px;
     marginBottom: 15px;
     marginHorizontal: 20px;
